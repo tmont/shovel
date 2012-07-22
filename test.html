@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<style type="text/css">
+			pre {
+				font-family: Consolas, Monaco, monospace;
+				font-size: 18px;
+				border: 1px dotted #CCCCCC;
+				padding: 10px;
+				color: #990000;
+				background-color: #DDDDDD;
+				background-image: -moz-linear-gradient(top, #EEEEEE, #DDDDDD);
+				background-image: -webkit-linear-gradient(top, #EEEEEE, #DDDDDD);
+			}
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		<script type="text/javascript" src="./jquery.shovel.js"></script>
+	</head>
+	<body>
+		<a href="/lol">LOL</a> |
+		<a href="/lol/5">LOL5</a> |
+		<a href="/bar">BAR</a> |
+		<a href="/baz">BAZ</a> |
+		<a href="/qux">QUX</a> |
+
+		<pre id="info">Click on a link</pre>
+
+		<script type="text/javascript">
+			$.shovel.enable();
+
+			$.shovel.addRoute(/\/lol\/(\d+)/, function(url, params, catalyst) {
+				$('#info').text('LOL ' + params[0]);
+			});
+
+			$.shovel.addRoute(/.*/, function() {
+				var data = {
+					args: arguments,
+					route: this
+				}
+				$('#info').text(JSON.stringify(data, null, 2));
+			});
+			$.shovel.addRoute('/lol', function() {
+				$('#info').text('LOL');
+			});
+		</script>
+	</body>
+</html>
