@@ -72,40 +72,40 @@
 		disable: function() {
 			$(document).off('click.' + ns, 'a');
 			$(window).off('popstate.' + ns);
-		}
-	};
+		},
 
-	$.shovel.addRoute = function(url, handlers, title) {
-		if (Object.prototype.toString.call(handlers) !== '[object Array]') {
-			handlers = [ handlers ];
-		}
+		addRoute: function(url, handlers, title) {
+			if (Object.prototype.toString.call(handlers) !== '[object Array]') {
+				handlers = [ handlers ];
+			}
 
-		var route = {
-			id: ++routeCount,
-			title: title || '',
-			url: url,
-			execute: function(url, catalyst) {
-				var params = [];
-				if (this.url instanceof RegExp) {
-					params = (this.url.exec(url) || [,]).slice(1);
-				}
-				for (var i = 0; i < handlers.length; i++) {
-					if (handlers[i].call(this, url, params, catalyst) === false) {
-						break;
+			var route = {
+				id: ++routeCount,
+				title: title || '',
+				url: url,
+				execute: function(url, catalyst) {
+					var params = [];
+					if (this.url instanceof RegExp) {
+						params = (this.url.exec(url) || [, ]).slice(1);
+					}
+					for (var i = 0; i < handlers.length; i++) {
+						if (handlers[i].call(this, url, params, catalyst) === false) {
+							break;
+						}
 					}
 				}
+			};
+
+			if (url instanceof RegExp) {
+				routeTable.regex.push(route);
+			} else {
+				routeTable.verbatim[url] = route;
 			}
-		};
 
-		if (url instanceof RegExp) {
-			routeTable.regex.push(route);
-		} else {
-			routeTable.verbatim[url] = route;
+			routeTable.lookup[route.id] = route;
+
+			return route;
 		}
-
-		routeTable.lookup[route.id] = route;
-
-		return route;
 	};
 
 }(window, document, jQuery));
